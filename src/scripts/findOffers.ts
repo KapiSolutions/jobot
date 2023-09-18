@@ -4,8 +4,7 @@ import type { ScrapperOptions } from "../types/main";
 
 const findOffers = async () => {
   const options: ScrapperOptions = await getOptions();
-  console.log("Scrapping...");
-
+  console.log(`Searching for ${options.searchValue} jobs with a limit of ${options.maxRecords} offers.`); 
 // Bot test
   const bot = new Bot();
   await bot.init();
