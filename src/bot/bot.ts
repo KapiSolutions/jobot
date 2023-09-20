@@ -1,19 +1,27 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import { Cluster } from "puppeteer-cluster";
 
 export default class Bot {
-  _browser: Browser | null = null;
-  _page: Page | null = null;
+  cluster: Cluster | null = null;
 
-  // Initialize the scrapper Bot
-  async init(): Promise<void> {
-    this._browser = await puppeteer.launch({ headless: false, defaultViewport: null }); //launch in the desktop mode
-    this._page = await this._browser.newPage();
+  async initCluster(maxConcurrency: number): Promise<void> {
+    this.cluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_PAGE,
+      maxConcurrency: maxConcurrency,
+      puppeteerOptions: {
+        headless: "new",
+        defaultViewport: null,
+      },
+    });
+
+    this.cluster.on("taskerror", (error: Error, data: any) => {
+      console.error(`Error executing task: ${data}: ${error.message}`);
+    });
   }
 
-  // Close the browser, kill the Bot
-  async close(): Promise<void> {
-    if (this._browser) {
-      await this._browser.close();
+  async closeCluster(): Promise<void> {
+    if (this.cluster) {
+      await this.cluster.idle();
+      await this.cluster.close();
     }
   }
 }
