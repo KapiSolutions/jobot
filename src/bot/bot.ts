@@ -1,14 +1,17 @@
 import { Cluster } from "puppeteer-cluster";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 export default class Bot {
   cluster: Cluster | null = null;
 
   async initCluster(maxConcurrency: number): Promise<void> {
+    puppeteer.use(StealthPlugin());
     this.cluster = await Cluster.launch({
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: maxConcurrency,
       puppeteerOptions: {
-        headless: "new",
+        headless: false,
         defaultViewport: null,
       },
     });
