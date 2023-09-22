@@ -1,5 +1,4 @@
-const express = require("express");
-const { Request, Response, NextFunction } = require("express");
+import express, { Request, Response, NextFunction } from "express";
 import NodeCache from "node-cache";
 import rateLimit from "express-rate-limit";
 import findOffers from "./scripts/findOffers";
@@ -22,7 +21,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Middleware to handle incorrect HTTP methods
-app.use((req: typeof Request, res: typeof Response, next: typeof NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -30,14 +29,14 @@ app.use((req: typeof Request, res: typeof Response, next: typeof NextFunction) =
 });
 
 // Endpoint to fetch job offers based on search value and limit
-app.get("/offers/:search_value", async (req: typeof Request, res: typeof Response) => {
+app.get("/offers/:search_value", async (req: Request, res: Response) => {
   const searchValue = req.params.search_value;
   // Validate search value parameter
   if (!searchValue || typeof searchValue != "string" || searchValue.length > 40) {
     return res.status(400).json({ error: "Invalid type or missing search value parameter" });
   }
   // Validate maxRecords/limit parameter, default 10, valid range is 1-50
-  const maxRecords = Math.min(50, Math.max(1, parseInt((req.query.limit as string) || "1"))) || 10;
+  const maxRecords = Math.min(50, Math.max(1, parseInt(req.query.limit || "1"))) || 10;
 
   // Check if the response is already cached
   const cacheKey = `${searchValue}-${maxRecords}`;
@@ -63,7 +62,7 @@ app.get("/offers/:search_value", async (req: typeof Request, res: typeof Respons
 });
 
 // Middleware to handle 404 (Not Found) errors
-app.use((req: typeof Request, res: typeof Response) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({ error: "Not Found" });
 });
 
