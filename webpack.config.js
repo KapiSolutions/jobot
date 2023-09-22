@@ -1,22 +1,20 @@
-const path = require('path');
+import { resolve as _resolve } from "path";
 
-module.exports = {
-  entry: './src/server.ts', // Entry point of your TypeScript application
-  target: 'node',
-  output: {
-    filename: 'bundle.js', // Output bundle name
-    path: path.resolve(__dirname, 'dist'), // Output directory
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/, // Transpile TypeScript files
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
-  },
+export const entry = "./src/server.ts";
+export const target = "node";
+export const output = {
+  filename: "bundle.js",
+  path: _resolve(__dirname, "dist"), // Output directory
+};
+export const module = {
+  rules: [
+    {
+      test: /\.ts$/,
+      use: "ts-loader",
+      exclude: /node_modules/,
+    },
+  ],
+};
+export const resolve = {
+  extensions: [".ts", ".js"],
 };
