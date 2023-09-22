@@ -11,6 +11,7 @@
   "dependencies": {
     "@inquirer/input": "^1.2.11",
     "commander": "^11.0.0",
+    "node-schedule": "^2.1.1",
     "puppeteer": "^21.2.1",
     "puppeteer-cluster": "^0.23.0",
     "puppeteer-extra": "^3.3.6",
