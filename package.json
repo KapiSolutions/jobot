@@ -1,7 +1,8 @@
 {
   "scripts": {
     "server": "ts-node ./src/server.ts",
-    "scrap:offers": "ts-node ./src/scripts/findOffers.ts"
+    "scrap:offers": "ts-node ./src/scripts/getOptions.ts",
+    "scrap:schedule": "ts-node ./src/scripts/croneSchedule.ts"
   },
   "devDependencies": {
     "@types/node": "^18.15.7",
