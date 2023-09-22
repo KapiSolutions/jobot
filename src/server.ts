@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import NodeCache from "node-cache";
 import rateLimit from "express-rate-limit";
 import findOffers from "./scripts/findOffers";
 import type { JobOffer, ScrapperOptions } from "./types/main";
@@ -6,10 +7,13 @@ import type { JobOffer, ScrapperOptions } from "./types/main";
 const app = express();
 const port = 4200 || process.env.PORT;
 
+// Create a cache instance with a 2-hour TTL
+const cache = new NodeCache({ stdTTL: 2 * 60 * 60 });
+
 // Configure rate limiter for api requests
 const limiter = rateLimit({
   windowMs: 6000, // 1 minute window
-  max: 10, // Limit each IP address to max 10 requests per window
+  max: 10, // Limit each IP address to max 10 requests per defined window
   message: "Too many requests from this IP, please try again later.",
 });
 
@@ -34,11 +38,22 @@ app.get("/offers/:search_value", async (req: Request, res: Response) => {
   // Validate maxRecords/limit parameter, default 10, valid range is 1-50
   const maxRecords = Math.min(50, Math.max(1, parseInt(req.query.limit || "1"))) || 10;
 
-  const options: ScrapperOptions = { searchValue, maxRecords };
+  // Check if the response is already cached
+  const cacheKey = `${searchValue}-${maxRecords}`;
+  const cachedResponse: Array<JobOffer> = cache.get(cacheKey);
 
-  // Scrapp job offers based on search value and provided limit
+  if (cachedResponse) {
+    // If cached response exists, return it
+    return res.status(200).json(cachedResponse);
+  }
+
   try {
+    // Scrapp job offers based on search value and provided limit
+    const options: ScrapperOptions = { searchValue, maxRecords };
     const offers: Array<JobOffer> = await findOffers(options);
+
+    // Store the response in the cache
+    cache.set(cacheKey, offers);
     res.status(200).json(offers);
   } catch (error) {
     console.error(error);
