@@ -1,12 +1,13 @@
 import input from "@inquirer/input";
 import { program } from "commander";
+import findOffers from "./findOffers";
 
 // Get scrapper options from the console input
 const getOptions = async () => {
   const mode = true;
   // mode true: get options directly from the script command eg: npm run scrap:offers -- -s html -l 10,
   // mode false: get options from the user console input during script execution
-  
+
   if (mode) {
     program
       .description("Scrape offers from two services")
@@ -16,7 +17,7 @@ const getOptions = async () => {
     const options = program.opts();
     // Validate maxRecords: should be at least 1
     const maxRecords = Math.max(1, options.maxRecords);
-    return { searchValue: options.searchValue, maxRecords: maxRecords };
+    await findOffers({ searchValue: options.searchValue, maxRecords: maxRecords });
   } else {
     const searchValue: string = await input({
       message: "Please enter the search value for the job:",
@@ -37,8 +38,8 @@ const getOptions = async () => {
         return "Please enter a positive number.";
       },
     });
-    return { searchValue: searchValue, maxRecords: parseInt(maxRecords) };
+    await findOffers({ searchValue: searchValue, maxRecords: parseInt(maxRecords) });
   }
 };
 
-export default getOptions;
+getOptions();
