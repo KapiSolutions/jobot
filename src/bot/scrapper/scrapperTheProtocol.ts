@@ -13,7 +13,7 @@ export default class ScrapperTheProtocol extends Bot {
   // Main function
   async getJobs(): Promise<Array<JobOffer>> {
     const searchQuery = `${this.options.searchValue.replaceAll(" ", "%20")}`;
-    const limit = this.options.maxRecords; //divide by 2 after creating second scrapper
+    const limit = this.options.maxRecords;
     try {
       await this.initCluster(2); // Set maximum concurrency to 2, setting more than 2 causes errors when scrapping the:protocol
       const jobUrls = await this.getJobsUrls(limit, searchQuery);
@@ -79,11 +79,11 @@ export default class ScrapperTheProtocol extends Bot {
               if (salary) {
                 if (salary.includes("–")) {
                   const [salaryPart1, salaryPart2] = salary.split("–").map((part) => part.trim());
-                  salaryFrom = salaryPart1.trim();
-                  salaryTo = salaryPart2.slice(0, salaryPart2.length - 3).trim();
+                  salaryFrom = salaryPart1.trim().replace(" ","");
+                  salaryTo = salaryPart2.slice(0, salaryPart2.length - 3).trim().replace(" ","");
                   currency = salaryPart2.slice(salaryPart2.length - 3).trim();
                 } else {
-                  salaryFrom = salary.slice(0, salary.length - 3).trim();
+                  salaryFrom = salary.slice(0, salary.length - 3).trim().replace(" ","");
                   salaryTo = salaryFrom;
                   currency = salary.slice(salary.length - 3).trim();
                 }
@@ -101,7 +101,7 @@ export default class ScrapperTheProtocol extends Bot {
 
               return {
                 title,
-                description,
+                description: description.replaceAll("\n"," "),
                 company,
                 salaryFrom,
                 salaryTo,
