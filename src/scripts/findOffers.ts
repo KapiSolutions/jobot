@@ -3,6 +3,7 @@ import type { ScrapperOptions, JobOffer } from "../types/main";
 import ScrapperNoFluffJobs from "../bot/scrapper/scrapperNoFluffJobs";
 import ScrapperTheProtocol from "../bot/scrapper/scrapperTheProtocol";
 import saveJson from "./saveJson";
+import saveCsv from "./saveCsv";
 
 const findOffers = async (): Promise<void> => {
   const options: ScrapperOptions = await getOptions();
@@ -16,6 +17,7 @@ const findOffers = async (): Promise<void> => {
 
   const offers = [...noFluffJobs, ...theProtocol];
   saveJson(offers, options);
+  saveCsv(offers, options);
 };
 
 findOffers();
