@@ -13,7 +13,7 @@ export default class ScrapperNoFluffJobs extends Bot {
   // Main function
   async getJobs(): Promise<Array<JobOffer>> {
     const searchQuery = `${this.options.searchValue.replaceAll(" ", "%20")}`;
-    const limit = this.options.maxRecords; //divide by 2 after creating second scrapper
+    const limit = this.options.maxRecords;
     try {
       await this.initCluster(3); // Set maximum concurrency to 3
       const jobUrls = await this.getJobsUrls(limit, searchQuery);
@@ -74,11 +74,11 @@ export default class ScrapperNoFluffJobs extends Bot {
               const salary = document.querySelector(".salary h4").textContent.trim();
               if (salary.includes("–")) {
                 const [salaryPart1, salaryPart2] = salary.split("–").map((part) => part.trim());
-                salaryFrom = salaryPart1.trim();
-                salaryTo = salaryPart2.slice(0, salaryPart2.length - 3).trim();
+                salaryFrom = salaryPart1.trim().replace(" ","");
+                salaryTo = salaryPart2.slice(0, salaryPart2.length - 3).trim().replace(" ","");
                 currency = salaryPart2.slice(salaryPart2.length - 3);
               } else {
-                salaryFrom = salary.slice(0, salary.length - 3).trim();
+                salaryFrom = salary.slice(0, salary.length - 3).trim().replace(" ","");
                 salaryTo = salaryFrom;
                 currency = salary.slice(salary.length - 3);
               }
@@ -99,7 +99,7 @@ export default class ScrapperNoFluffJobs extends Bot {
 
               return {
                 title,
-                description,
+                description: description.replaceAll("\n"," "),
                 company,
                 salaryFrom,
                 salaryTo,
