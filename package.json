@@ -5,7 +5,6 @@
     "scrap:schedule": "ts-node ./src/scripts/croneSchedule.ts"
   },
   "devDependencies": {
-    "@types/express": "^4.17.17",
     "@types/node": "^18.15.7",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
