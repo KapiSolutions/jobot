@@ -16,8 +16,13 @@ const findOffers = async (options: ScrapperOptions): Promise<Array<JobOffer>> =>
   const theProtocol: Array<JobOffer> = await scrappTheProtocol.getJobs();
 
   const offers = [...noFluffJobs, ...theProtocol];
-  saveJson(offers, options);
-  saveCsv(offers, options);
+
+  if (false) {
+    // disable saving data
+    saveJson(offers, options);
+    saveCsv(offers, options);
+  }
+
   console.log("✔️  Done!");
   return offers;
 };
