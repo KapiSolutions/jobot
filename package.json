@@ -1,7 +1,8 @@
 {
   "scripts": {
     "server": "ts-node ./src/server.ts",
-    "scrap:offers": "ts-node ./src/scripts/findOffers.ts"
+    "scrap:offers": "ts-node ./src/scripts/getOptions.ts",
+    "scrap:schedule": "ts-node ./src/scripts/croneSchedule.ts"
   },
   "devDependencies": {
     "@types/node": "^18.15.7",
@@ -11,6 +12,7 @@
   "dependencies": {
     "@inquirer/input": "^1.2.11",
     "commander": "^11.0.0",
+    "node-schedule": "^2.1.1",
     "puppeteer": "^21.2.1",
     "puppeteer-cluster": "^0.23.0",
     "puppeteer-extra": "^3.3.6",
