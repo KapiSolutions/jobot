@@ -11,7 +11,7 @@ export default class Bot {
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: maxConcurrency,
       puppeteerOptions: {
-        headless: false,
+        headless: "new",
         defaultViewport: null,
       },
     });
