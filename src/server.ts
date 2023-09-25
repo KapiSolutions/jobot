@@ -1,13 +1,11 @@
-const express = require('express');
-const NodeCache = require('node-cache');
-const rateLimit = require('express-rate-limit');
-const findOffers = require('./scripts/findOffers');
-import type { JobOffer, ScrapperOptions } from './types/main';
-import type { Request, Response,NextFunction } from 'express';
+import express, { Request, Response, NextFunction } from "express";
+import NodeCache from "node-cache";
+import rateLimit from "express-rate-limit";
+import findOffers from "./scripts/findOffers";
+import type { JobOffer, ScrapperOptions } from "./types/main";
 
 const app = express();
 const port = 4200 || process.env.PORT;
-
 
 // Create a cache instance with a 2-hour TTL
 const cache = new NodeCache({ stdTTL: 2 * 60 * 60 });
