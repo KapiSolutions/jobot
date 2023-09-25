@@ -1,6 +1,7 @@
 import { Cluster } from "puppeteer-cluster";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+require("dotenv").config();
 
 export default class Bot {
   cluster: Cluster | null = null;
@@ -13,7 +14,9 @@ export default class Bot {
       puppeteerOptions: {
         headless: "new",
         defaultViewport: null,
-      },
+        executablePath:
+        process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+    },
     });
 
     this.cluster.on("taskerror", (error: Error, data: any) => {
