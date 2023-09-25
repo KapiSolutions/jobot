@@ -3,7 +3,7 @@
     "server": "ts-node ./src/server.ts",
     "scrap:offers": "ts-node ./src/scripts/getOptions.ts",
     "scrap:schedule": "ts-node ./src/scripts/croneSchedule.ts",
-    "build": "npm install && tsc",
+    "build": "tsc",
     "start": "node ./dist/server.js"
   },
   "devDependencies": {
