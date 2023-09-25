@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm install -g typescript
+RUN npm install typescript
 # build folder: dist
 RUN npm run build 
 
