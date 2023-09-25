@@ -4,7 +4,7 @@
     "scrap:offers": "ts-node ./src/scripts/getOptions.ts",
     "scrap:schedule": "ts-node ./src/scripts/croneSchedule.ts",
     "build": "npm install && tsc",
-    "start": "node ./server.js"
+    "start": "node ./dist/server.js"
   },
   "devDependencies": {
     "@types/node": "^18.15.7",
