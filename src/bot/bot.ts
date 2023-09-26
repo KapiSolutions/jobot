@@ -14,9 +14,8 @@ export default class Bot {
       maxConcurrency: maxConcurrency,
       timeout: 60000,
       retryLimit: 1,
-      puppeteer,
       puppeteerOptions: {
-        headless: true,
+        headless: "new",
         defaultViewport: { width: 1280, height: 800 },
         executablePath:
           process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
