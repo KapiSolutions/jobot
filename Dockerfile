@@ -1,36 +1,22 @@
-# Stage 1: Install Chrome and prepare development environment
-FROM node:slim as development
-# Set environment variables for Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+# Stage 1: Build and install dependencies
+FROM node:18 as builder
 
-# Install latest chrome dev package
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["dumb-init", "--"]
+# Set environment variable for Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm ci
+
+# Copy the source code
 COPY . .
-# build folder: dist
-RUN npm run build 
 
+# Build the application
+RUN npm run build
 
-# Stage 2: Prepare the final production image
-FROM node:slim as production
-
-ARG NODE_ENV=production
+# Stage 2: Create the production image
+FROM ghcr.io/puppeteer/puppeteer:21.3.4 as production
 
 # Set environment variables 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -38,11 +24,14 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
-COPY package*.json ./
 
+COPY package*.json ./
 RUN npm ci --only=production
 
-# Copy the compiled code from the development stage
-COPY --from=development /usr/src/app/dist ./dist
+# Copy the compiled code from the builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Expose the port 
+EXPOSE 4200
 
 CMD ["node", "dist/server.js"]

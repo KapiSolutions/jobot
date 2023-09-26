@@ -13,7 +13,7 @@ export default class Bot {
       maxConcurrency: maxConcurrency,
       puppeteerOptions: {
         headless: "new",
-        defaultViewport: null,
+        defaultViewport: { width: 1280, height: 800 },
         executablePath:
           process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
         args: ["--disable-gpu", "--disable-setuid-sandbox", "--no-sandbox", "--no-zygote"],
