@@ -18,6 +18,7 @@ const limiter = rateLimit({
   windowMs: 6000, // 1 minute window
   max: 10, // Limit each IP address to max 10 requests per defined window
   message: "Too many requests from this IP, please try again later.",
+  validate: {trustProxy: false}
 });
 
 // Apply the rate limiter middleware to all routes
