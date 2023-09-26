@@ -34,7 +34,7 @@ export default class ScrapperNoFluffJobs extends Bot {
       const pages = Math.trunc(limit / 20) + 1;
       const promises = Array.from({ length: pages }, (_, i) =>
         this.cluster.execute(async ({ page }) => {
-          await page.goto(`${this.baseUrl}${searchQuery}?page=${i + 1}`);
+          await page.goto(`${this.baseUrl}${searchQuery}?page=${i + 1}`, this.timeout);
           const urls = await page.$$eval(".list-container a", (elements: Array<HTMLAnchorElement>) =>
             elements.map((element: HTMLAnchorElement) => element.href).filter((href: string) => href.includes("/pl/"))
           );
@@ -56,7 +56,7 @@ export default class ScrapperNoFluffJobs extends Bot {
       await Promise.all(
         jobUrls.map((url: string) =>
           this.cluster.execute(async ({ page }): Promise<void> => {
-            await page.goto(url);
+            await page.goto(url, this.timeout);
             await page.waitForSelector("article");
             const offer: JobOffer = await page.evaluate((url: string) => {
               let salaryFrom: string, salaryTo: string, currency: string, addedAt: string;

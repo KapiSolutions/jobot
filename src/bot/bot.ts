@@ -5,6 +5,7 @@ require("dotenv").config();
 
 export default class Bot {
   cluster: Cluster | null = null;
+  timeout = { timeout: 60000 };
 
   async initCluster(maxConcurrency: number): Promise<void> {
     puppeteer.use(StealthPlugin());

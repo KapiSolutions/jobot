@@ -34,7 +34,7 @@ export default class ScrapperTheProtocol extends Bot {
       const pages = Math.trunc(limit / 25) + 1;
       const promises = Array.from({ length: pages }, (_, i) =>
         this.cluster.execute(async ({ page }) => {
-          await page.goto(`${this.baseUrl}?kw=${searchQuery}&pageNumber=${i + 1}`);
+          await page.goto(`${this.baseUrl}?kw=${searchQuery}&pageNumber=${i + 1}`, this.timeout);
           const urls = await page.$$eval(
             '[data-test="offersList"] [data-test="list-item-offer"]',
             (elements: Array<HTMLAnchorElement>) => elements.map((element: HTMLAnchorElement) => element.href)
@@ -57,7 +57,7 @@ export default class ScrapperTheProtocol extends Bot {
       await Promise.all(
         jobUrls.map((url: string) =>
           this.cluster?.execute(async ({ page }): Promise<void> => {
-            await page.goto(url);
+            await page.goto(url, this.timeout);
             await page.waitForSelector("#offerHeader");
 
             const offer: JobOffer = await page.evaluate((url: string) => {
@@ -79,11 +79,17 @@ export default class ScrapperTheProtocol extends Bot {
               if (salary) {
                 if (salary.includes("–")) {
                   const [salaryPart1, salaryPart2] = salary.split("–").map((part) => part.trim());
-                  salaryFrom = salaryPart1.trim().replace(" ","");
-                  salaryTo = salaryPart2.slice(0, salaryPart2.length - 3).trim().replace(" ","");
+                  salaryFrom = salaryPart1.trim().replace(" ", "");
+                  salaryTo = salaryPart2
+                    .slice(0, salaryPart2.length - 3)
+                    .trim()
+                    .replace(" ", "");
                   currency = salaryPart2.slice(salaryPart2.length - 3).trim();
                 } else {
-                  salaryFrom = salary.slice(0, salary.length - 3).trim().replace(" ","");
+                  salaryFrom = salary
+                    .slice(0, salary.length - 3)
+                    .trim()
+                    .replace(" ", "");
                   salaryTo = salaryFrom;
                   currency = salary.slice(salary.length - 3).trim();
                 }
@@ -101,7 +107,7 @@ export default class ScrapperTheProtocol extends Bot {
 
               return {
                 title,
-                description: description.replaceAll("\n"," "),
+                description: description.replaceAll("\n", " "),
                 company,
                 salaryFrom,
                 salaryTo,
