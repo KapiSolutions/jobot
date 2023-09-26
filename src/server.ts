@@ -7,6 +7,9 @@ import type { JobOffer, ScrapperOptions } from "./types/main";
 const app = express();
 const port = 4200 || process.env.PORT;
 
+// Enable 'trust proxy' to trust X-Forwarded-* headers
+app.set("trust proxy", true);
+
 // Create a cache instance with a 2-hour TTL
 const cache = new NodeCache({ stdTTL: 2 * 60 * 60 });
 
@@ -36,7 +39,7 @@ app.get("/offers/:search_value", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid type or missing search value parameter" });
   }
   // Validate maxRecords/limit parameter, default 10, valid range is 1-50
-  const maxRecords = Math.min(50, Math.max(1, parseInt(req.query.limit as string || "1"))) || 10;
+  const maxRecords = Math.min(50, Math.max(1, parseInt((req.query.limit as string) || "1"))) || 10;
 
   // Check if the response is already cached
   const cacheKey = `${searchValue}-${maxRecords}`;
@@ -59,6 +62,11 @@ app.get("/offers/:search_value", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// Display welcome message
+app.get("/", (req: Request, res: Response) => {
+  res.send("🤖 Jobot! This project is a bot for scrapping tech job boards.");
 });
 
 // Middleware to handle 404 (Not Found) errors
