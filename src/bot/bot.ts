@@ -15,8 +15,9 @@ export default class Bot {
         headless: "new",
         defaultViewport: null,
         executablePath:
-        process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
-    },
+          process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+        args: ["--disable-gpu", "--disable-setuid-sandbox", "--no-sandbox", "--no-zygote"],
+      },
     });
 
     this.cluster.on("taskerror", (error: Error, data: any) => {
