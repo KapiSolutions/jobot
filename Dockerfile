@@ -22,7 +22,7 @@ RUN npm run build
 
 
 # Stage 2: Prepare the final production image
-FROM node:18-alpine as production
+FROM node:slim as production
 
 ARG NODE_ENV=production
 
