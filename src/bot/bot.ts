@@ -12,6 +12,8 @@ export default class Bot {
     this.cluster = await Cluster.launch({
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: maxConcurrency,
+      timeout: 60000,
+      retryLimit: 1,
       puppeteerOptions: {
         headless: "new",
         defaultViewport: { width: 1280, height: 800 },
