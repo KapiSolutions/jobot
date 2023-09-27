@@ -38,24 +38,25 @@ Make sure you have Node.js installed.
 npm install
 ```
 
-### A) Scrapp offers using CLI
+### Scrapp offers 
+- #### Using CLI
+  ```bash
+  npm run scrap:offers -- -s search_value -l limit
+  ```
+  Replace `search_value` and `limit` with your values.
 
-```bash
-npm run scrap:offers -- -s search_value -l limit
-```
-Replace `search_value` and `limit` with your values.
+- #### Using API request
 
-### B) Scrapp offers using API request
-Start the server and expose the API for getting offers:
+  Start the server and expose the API for getting offers:
 
-```bash
-npm run server
-```
-Server should be exposed on port 4200.
+  ```bash
+  npm run server
+  ```
+  Server should be exposed on port 4200.
 
-### API Reference
+## API Reference
 
-### Get Offers by Search Value
+### Get Offers
 
 Get a list of offers based on a search value.
 
