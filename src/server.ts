@@ -18,7 +18,7 @@ const limiter = rateLimit({
   windowMs: 6000, // 1 minute window
   max: 10, // Limit each IP address to max 10 requests per defined window
   message: "Too many requests from this IP, please try again later.",
-  validate: {trustProxy: false}
+  validate: { trustProxy: false },
 });
 
 // Apply the rate limiter middleware to all routes
@@ -40,7 +40,7 @@ app.get("/offers/:search_value", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Invalid type or missing search value parameter" });
   }
   // Validate maxRecords/limit parameter, default 10, valid range is 1-50
-  const maxRecords = Math.min(50, Math.max(1, parseInt((req.query.limit as string) || "1"))) || 10;
+  const maxRecords = req.query.limit ? Math.min(50, Math.max(1, parseInt((req.query.limit as string) || "1"))) : 10;
 
   // Check if the response is already cached
   const cacheKey = `${searchValue}-${maxRecords}`;
