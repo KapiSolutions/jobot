@@ -20,6 +20,7 @@ export default class Bot {
         executablePath:
           process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
         args: ["--disable-gpu", "--disable-setuid-sandbox", "--no-sandbox", "--no-zygote"],
+        targetFilter: (target) => !!target.url
       },
     });
 
